@@ -1,0 +1,77 @@
+div,p{ margin: 0;padding: 0;}
+body{ 
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    font-family: NSimSun;
+}
+button{ border: none;outline: none;}
+/* 清除浮动 */
+.clearfloat:after{display:block;clear:both;content:"";visibility:hidden;height:0} 
+.clearfloat{zoom:1} 
+.xiaoxiaole{
+    width: 400px;
+    height: 422px;
+    margin: 0 auto;
+    position: relative;
+    background: url(../images/background.png) no-repeat;
+}
+.xxl-top{
+    width: 400px;
+    height: 54px;
+    background: url(../images/infotip.png) no-repeat -13px 0;
+    position: relative;
+}
+.xxl-top p{ 
+    position: absolute;
+    top: 12px;
+}
+.xxl-grade-p{ left: 75px;}
+p.xxl-time-p{ 
+    left: 163px;
+    top: 8px;
+}
+.xxl-fraction-p{ left: 288px;}
+.xxl-top p span{
+    display: inline-block;
+    width: 100%;
+}
+.xxl-bottom{
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+}
+.xxl-bottom button{
+    font-size: 14px;
+    color: #fff;
+    width: 137px;
+    height: 40px;
+    line-height: 40px;
+    background-image: url(../images/button.png);
+    background-repeat: no-repeat;
+    background-position: -2px -4px; 
+    background-color: transparent;
+}
+/* 主体 */
+.xxl-main{
+    width: 300px;
+    height: 318px;
+    margin: 3px auto;
+    overflow: hidden;
+    padding: 0 14px;
+    box-sizing: border-box;
+}
+.xxl-main span{
+    float: left;
+    margin: 0 1px 1px 0;
+    width: 32px;
+    height: 32px;
+    background-repeat: no-repeat;
+    background-color: rgba(255,255,255,.5);
+}
+span.xxl-chick{ background-image: url(../images/tile_0.png);}
+span.xxl-fox{ background-image: url(../images/tile_1.png);}
+span.xxl-frog{ background-image: url(../images/tile_2.png);}
+span.xxl-cattle{ background-image: url(../images/tile_3.png);}
+span.xxl-owl{ background-image: url(../images/tile_4.png);}
+span.xxl-bear{ background-image: url(../images/tile_5.png);}
