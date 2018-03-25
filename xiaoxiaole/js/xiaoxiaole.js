@@ -34,14 +34,6 @@ for(var i=1;i<=72;i++){
     }
 }
 xxlMain.innerHTML = _html;//将动态的span标签挂在到dom节点
-// 添加被消除的span
-function addSpan(){
-    var xxlSpan = document.querySelectorAll("#xxlMain span");
-    if( xxlSpan<72 ){
-        spanFun();
-        xxlMain.innerHTML = _html;//将动态的span标签挂在到dom节点
-    }
-}
 // 倒计时
 var countdown = document.querySelector(".xxl-time");
 var s = 59;
@@ -74,28 +66,34 @@ for(var i = 0;i<spanLength; i++){
     // 拖拽进入
     spanDom[i].ondragover = function(e){
         spanChooseIn = this;
-        spanLeft = this.offsetLeft;
+        spanLeft = this.offsetLeft; 
         spanTop = this.offsetTop;
     }
     // 拖拽结束
     spanDom[i].ondragend = function(e){
-        spanChoose.style.left = spanLeft +'px';
-        spanChoose.style.top = spanTop +'px';
-        spanChooseIn.style.left = spanChooseLeft +'px';
-        spanChooseIn.style.top = spanChooseTop +'px';
+        if(spanChoose.offsetLeft == spanLeft && spanChoose.offsetTop != spanTop){
+            spanChoose.style.top = spanTop +'px';
+            spanChooseIn.style.top = spanChooseTop +'px';
+        }
+        if(spanChoose.offsetTop == spanTop && spanChoose.offsetLeft != spanLeft){
+            spanChoose.style.left = spanLeft +'px';
+            spanChooseIn.style.left = spanChooseLeft +'px';
+        }
     }
 }
-// function allowDrop(ev){
-//     ev.preventDefault();
-// }
+// 遇见三个相同的消除
+function removeSpan(){ }
+// 消除之后添加元素
 
-// function drag(ev){
-//     ev.dataTransfer.setData("Text",ev.target.id);
-//     console.log(ev.target)
-// }
-// function drop(ev){
-//     ev.preventDefault();
-//     console.log(111);
-//     var data=ev.dataTransfer.getData("Text");
-//     ev.target.appendChild(xxlMain);
-// }
+function addSpan(){ }
+
+// 获取鼠标移动值函数
+function getMousePos(event) {
+    var e = event || window.event;
+    var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+    var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+    var x = e.pageX || e.clientX + scrollX;
+    var y = e.pageY || e.clientY + scrollY;
+    //alert('x: ' + x + '\ny: ' + y);
+    console.log (  x, y );
+}
