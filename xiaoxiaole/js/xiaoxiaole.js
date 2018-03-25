@@ -1,29 +1,36 @@
 var xxlMain = document.getElementById('xxlMain');//挂载的dom节点
-var _html = "";//动态添加span标签
-var _number= [];//检查是否有第一次就出现的三个连续可消灭的数据
+var _html = ""; //动态添加span标签
+var _number= []; //检查是否有第一次就出现的三个连续可消灭的数据
+var spanTop = 0; //span position的top值
+var spanLeft = 0; //span position的left值
+var spanChoose = null; //记录被拖拽的span
+var spanChooseIn = null; //记录被进入的span
+var spanChooseLeft = null; //记录被进入的span 的 left 值
+var spanChooseTop = null; //记录被进入的span 的 top 值
 // 随机生成一个span
-function spanFun(){
+function spanFun(spanLeft,spanTop){
     var random = Math.floor(Math.random()*6+1);
     if( random==1 ){
-        _html += '<span name=1 class="xxl-chick"></span>';
+        _html += '<span name=1 style="left:'+spanLeft+'px;top:'+spanTop+'px" class="xxl-chick"></span>';
     }else if( random==2 ){
-        _html += '<span name=2 class="xxl-fox"></span>';
+        _html += '<span name=2 style="left:'+spanLeft+'px;top:'+spanTop+'px" class="xxl-fox"></span>';
     }else if( random==3 ){
-        _html += '<span name=3 class="xxl-frog"></span>';
+        _html += '<span name=3 style="left:'+spanLeft+'px;top:'+spanTop+'px" class="xxl-frog"></span>';
     }else if( random==4 ){
-        _html += '<span name=4 class="xxl-cattle"></span>';
+        _html += '<span name=4 style="left:'+spanLeft+'px;top:'+spanTop+'px" class="xxl-cattle"></span>';
     }else if( random==5 ){
-        _html += '<span name=5 class="xxl-owl"></span>';
+        _html += '<span name=5 style="left:'+spanLeft+'px;top:'+spanTop+'px" class="xxl-owl"></span>';
     }else{
-        _html += '<span name=6 class="xxl-bear"></span>';
+        _html += '<span name=6 style="left:'+spanLeft+'px;top:'+spanTop+'px" class="xxl-bear"></span>';
     }
 }
 // 生成HTML页面
-for(var i=1,r=0;true;i++){
-    spanFun();
-    r ++ ;
-    if( r==72 ){
-        break;
+for(var i=1;i<=72;i++){
+    spanFun(spanLeft,spanTop);
+    spanLeft += 33;
+    if(spanLeft>263){
+        spanLeft = 0
+        spanTop += 33;
     }
 }
 xxlMain.innerHTML = _html;//将动态的span标签挂在到dom节点
@@ -46,7 +53,49 @@ var timer = setInterval(function(){
         t--;
     }
     if( s==0 && t==0){
+        console.log("GAME OVER");
         clearInterval(timer);
     }
     countdown.innerHTML = (t<10?("0"+t):t) + ":" + (s<10?("0"+s):s);
 },1000);
+// 拖拽效果
+var spanDom = xxlMain.querySelectorAll("span"); //显示的 span 节点 
+var spanLength = spanDom.length;//span的length
+var spanX = "";//拖拽元素的X坐标
+var spanY = "";//拖拽元素的Y坐标
+for(var i = 0;i<spanLength; i++){
+    spanDom[i].index = i;
+    // 拖拽事件开始
+    spanDom[i].ondragstart = function(e){
+        spanChoose = this;
+        spanChooseLeft = this.offsetLeft;
+        spanChooseTop = this.offsetTop;
+    }
+    // 拖拽进入
+    spanDom[i].ondragover = function(e){
+        spanChooseIn = this;
+        spanLeft = this.offsetLeft;
+        spanTop = this.offsetTop;
+    }
+    // 拖拽结束
+    spanDom[i].ondragend = function(e){
+        spanChoose.style.left = spanLeft +'px';
+        spanChoose.style.top = spanTop +'px';
+        spanChooseIn.style.left = spanChooseLeft +'px';
+        spanChooseIn.style.top = spanChooseTop +'px';
+    }
+}
+// function allowDrop(ev){
+//     ev.preventDefault();
+// }
+
+// function drag(ev){
+//     ev.dataTransfer.setData("Text",ev.target.id);
+//     console.log(ev.target)
+// }
+// function drop(ev){
+//     ev.preventDefault();
+//     console.log(111);
+//     var data=ev.dataTransfer.getData("Text");
+//     ev.target.appendChild(xxlMain);
+// }

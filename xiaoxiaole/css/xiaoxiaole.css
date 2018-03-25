@@ -60,14 +60,15 @@ p.xxl-time-p{
     overflow: hidden;
     padding: 0 14px;
     box-sizing: border-box;
+    position: relative;
 }
 .xxl-main span{
-    float: left;
-    margin: 0 1px 1px 0;
+    position: absolute;
     width: 32px;
     height: 32px;
     background-repeat: no-repeat;
     background-color: rgba(255,255,255,.5);
+    cursor: pointer;
 }
 span.xxl-chick{ background-image: url(../images/tile_0.png);}
 span.xxl-fox{ background-image: url(../images/tile_1.png);}
