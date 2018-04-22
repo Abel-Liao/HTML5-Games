@@ -1,0 +1,9 @@
+img{ display: none;}
+.games{
+    width: 560px;
+    margin: 0 auto;
+}
+.up{
+    position: relative;
+    z-index: 1;
+}

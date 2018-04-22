@@ -12,6 +12,7 @@ var value = 0;//记录span的位置
 var spanValue = null;// 记录被拖拽span标签的value
 var spanValueIn = null;// 记录被进入span标签的value
 var spanNames = null;// 记录被拖拽span 的name
+var allName = [];
 // 随机生成一个span
 function spanFun(spanLeft,spanTop,value){
     var random = Math.floor(Math.random()*6+1);
@@ -111,7 +112,7 @@ for(var i = 0;i<spanLength; i++){
         removeSpan();
     }
 }
-// 遇见三个相同的消除
+// 遇见三个或者以上相同的消除
 function removeSpan(){ 
     var startValue = (parseInt(spanValue/8))*8;//获取被拖拽元素所在行数的起始value值
     var dragName = [];//获取被拖拽元素所在行数的所有name值
@@ -119,44 +120,10 @@ function removeSpan(){
         dragName.push(getElementByAttr("span","value",i)[0].getAttribute("name"));
     }
     var dragNameLen = dragName.length;
-    for(var i=0;i<dragNameLen;i++){
-        for(var r=i;r<dragNameLen;r++){
-            if(dragName[r]==dragName[i]){
-                for(var n=r;n<dragNameLen;n++){
-                    if(dragName[r]==dragName[n]){
-                        for(var m=n;m<dragNameLen;m++){
-                            if(dragName[m]==dragName[n]){
-                                for(var a=m;a<dragNameLen;a++){
-                                    if(dragName[a]==dragName[m]){
-                                        for(var b=a;b<dragNameLen;b++){
-                                            if(dragName[a]==dragName[b]){
-                                                // console.log("5个相等");
-                                            }else{
-                                                continue
-                                            }
-                                        }
-                                    }else{
-                                        // console.log("4个相等");
-                                        continue;
-                                    }
-                                }
-                            }else{
-                                // console.log("3个相等");
-                                continue;
-                            }
-                        }
-                    }else{
-                        // console.log("2个相等");
-                        continue;
-                    }
-                }
-            }else{
-                // console.log("1个相等");
-                continue;
-            }
-        }
-    }
-
+    var delSpan = []; 
+    // 判断移动之后横向是否有三个或者三个以上的name相同
+    console.log(dragName);
+    console.log(spanChoose);
 }
 // 消除之后添加元素
 
