@@ -45,7 +45,7 @@ window.onload = function(){
     var x = 0,y = 0; //猴哥的起始位置
     // var boxPostion = [[35,0],[70,0]];// 箱子起始位置
     var boxPostion = [[35,0]];// 箱子起始位置
-    var treePostion = [[35*5,35*7-11]];// 树木位置
+    var treePostion = [[35*5,35*7-11],[35*7,35*4-11]];// 树木位置
     var succrssPostion = [[35*7,35*7],[35*5,35*3],[35*8,35*4]];// 成功圆位置
     // 绘制多个相同目标图片
     var drawAny = function (name,postion){
@@ -132,10 +132,13 @@ window.onload = function(){
             isBox:true,
         };
         // 移动的下一个路径不能有树木(x,y不能与之相等)
-        if(x == 35*5 && y == 35*7){
-            isTrue.isTree = false;
-        }else{
-            isTrue.isTree = true;
+        for(var i=0;i<treePostion.length;i++){
+            if((x == treePostion[i][0]) && (y-11 == treePostion[i][1])){
+                isTrue.isTree = false;
+                break;
+            }else{
+                isTrue.isTree = true;
+            }
         }
         // 移动的路径上不能有两个木箱或者以上
         if(true){
