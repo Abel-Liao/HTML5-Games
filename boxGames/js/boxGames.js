@@ -92,7 +92,10 @@ window.onload = function(){
     // 猴哥左右移动
     var lrMobile = function(value,direction){
         x += value*35;
-        var isSame = (y==boxPostion[0][1]) && x==boxPostion[0][0];
+        var isSame;
+        for(var i=0;i<boxPostion.length;i++){
+            isSame = (y==boxPostion[i][1]) && x==boxPostion[i][0];
+        }
         if(isSame){
             boxMobile(value,direction);
         }
@@ -106,7 +109,10 @@ window.onload = function(){
     // 猴哥上下移动
     var tbMobile = function(value,direction){
         y += value*35;
-        var isSame = (y==boxPostion[0][1]) && x==boxPostion[0][0];
+        var isSame;
+        for(var i=0;i<boxPostion.length;i++){
+            isSame = (y==boxPostion[i][1]) && x==boxPostion[i][0];
+        }
         if(isSame){
             boxMobile(value,direction);
         }
