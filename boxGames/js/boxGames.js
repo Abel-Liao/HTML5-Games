@@ -18,7 +18,7 @@ window.onload = function(){
         if(id==down || id==up || id==left || id==right){ // 判断是否为绘制猴哥
             this.xPostion = xPostion-7.5;
             this.yPostion = yPostion-27;
-        }else if(id==box){ // 判断是否为绘制箱子
+        }else if(id==box || id==tree){ // 判断是否为绘制箱子 或者 大树
             this.xPostion = xPostion;
             this.yPostion = yPostion-11;
         }else{
@@ -44,8 +44,8 @@ window.onload = function(){
     }
     var x = 0,y = 0; //猴哥的起始位置
     // var boxPostion = [[35,0],[70,0]];// 箱子起始位置
-    var boxPostion = [[35,0]];// 箱子起始位置
-    var treePostion = [[35*5,35*7-11],[35*7,35*4-11]];// 树木位置
+    var boxPostion = [[35,0],[210,210],[35*7,35*5],[35*9,35*10]];// 箱子起始位置
+    var treePostion = [[35*5,35*7],[35*7,35*4]];// 树木位置
     var succrssPostion = [[35*7,35*7],[35*5,35*3],[35*8,35*4]];// 成功圆位置
     // 绘制多个相同目标图片
     var drawAny = function (name,postion){
@@ -92,13 +92,34 @@ window.onload = function(){
     // 猴哥左右移动
     var lrMobile = function(value,direction){
         x += value*35;
-        var isSame;
         for(var i=0;i<boxPostion.length;i++){
-            isSame = (y==boxPostion[i][1]) && x==boxPostion[i][0];
-        }
-        if(isSame){
-            boxMobile(value,direction);
-        }
+            var isSame = (y==boxPostion[i][1]) && x==boxPostion[i][0];
+            var walk = true;
+            if(isSame){
+                for(var r=0;r<boxPostion.length;r++){
+                    if(r==i){
+                        continue;
+                    }else{
+                        if(boxPostion[i][1]==boxPostion[r][1] && ((boxPostion[i][0]+35*value)==boxPostion[r][0])){
+                            x-=value*35;
+                            walk = false;
+                            break;
+                        }
+                    }
+                }
+                // 判断是否有小树
+                for(var t=0;t<treePostion.length;t++){
+                    if(boxPostion[i][1]==treePostion[t][1] && ((boxPostion[i][0]+35*value)==treePostion[t][0])){
+                        x-=value*35;
+                        walk = false;
+                        break;
+                    }
+                }
+                if(walk){
+                    boxMobile(value,direction,i);
+                }
+            }
+        } 
         if(isMobile().isTree){
             allPic(direction);
         }else{
@@ -109,12 +130,34 @@ window.onload = function(){
     // 猴哥上下移动
     var tbMobile = function(value,direction){
         y += value*35;
-        var isSame;
         for(var i=0;i<boxPostion.length;i++){
-            isSame = (y==boxPostion[i][1]) && x==boxPostion[i][0];
-        }
-        if(isSame){
-            boxMobile(value,direction);
+            var isSame = (y==boxPostion[i][1]) && x==boxPostion[i][0];
+            var walk = true;
+            if(isSame){
+                for(var r=0;r<boxPostion.length;r++){
+                    // 如果r==i，则跳出本次循环
+                    if(r==i){
+                        continue;
+                    }else{ //否则判断箱子路径是否会有箱子或者树木
+                        if((boxPostion[i][1]+35*value)==boxPostion[r][1] && boxPostion[i][0]==boxPostion[r][0]){
+                            y-=value*35;
+                            walk = false;
+                            break;
+                        }
+                    }
+                }
+                // 判断是否有小树
+                for(var t=0;t<treePostion.length;t++){
+                    if((boxPostion[i][1]+35*value)==treePostion[t][1] && boxPostion[i][0]==treePostion[t][0]){
+                        y-=value*35;
+                        walk = false;
+                        break;
+                    }
+                }
+                if(walk){
+                    boxMobile(value,direction,i);
+                }
+            }
         }
         if(isMobile().isTree){
             allPic(direction);
@@ -124,11 +167,11 @@ window.onload = function(){
         }
     }
     // 猴哥推动箱子移动
-    var boxMobile = function(value,direction){
+    var boxMobile = function(value,direction,num){
         if(direction==right || direction==left){
-            boxPostion[0] = [boxPostion[0][0]+35*value,boxPostion[0][1]];
+            boxPostion[num] = [boxPostion[num][0]+35*value,boxPostion[num][1]];
         }else if(direction==up || direction==down){
-            boxPostion[0] = [boxPostion[0][0],boxPostion[0][1]+35*value];
+            boxPostion[num] = [boxPostion[num][0],boxPostion[num][1]+35*value];
         }
     }
     // 判断猴哥是否移动
@@ -139,20 +182,13 @@ window.onload = function(){
         };
         // 移动的下一个路径不能有树木(x,y不能与之相等)
         for(var i=0;i<treePostion.length;i++){
-            if((x == treePostion[i][0]) && (y-11 == treePostion[i][1])){
+            if((x == treePostion[i][0]) && (y == treePostion[i][1])){
                 isTrue.isTree = false;
                 break;
             }else{
                 isTrue.isTree = true;
             }
         }
-        // 移动的路径上不能有两个木箱或者以上
-        if(true){
-            
-        }
-            // 横向移动 (y轴不变，x轴发生改变)
-            // 纵向移动 (x轴不变,y轴发生改变)
-        // 移动的路径上不能有木箱后面有树木
         return isTrue;
     }
 }
