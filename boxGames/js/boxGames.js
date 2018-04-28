@@ -78,90 +78,59 @@ window.onload = function(){
         var keyNum=window.event ? event.keyCode :event.which;
         if(keyNum == 39 || keyNum == 40 || keyNum == 38 || keyNum == 37){
             if(keyNum == 40){// 下
-                tbMobile(1,down);
+                lrtmMobile(1,down);
             }else if(keyNum == 38){ // 上
-                tbMobile(-1,up);
+                lrtmMobile(-1,up);
             }else if(keyNum == 37){ // 左
-                lrMobile(-1,left);
+                lrtmMobile(-1,left);
             }else if(keyNum == 39){ // 右
-                lrMobile(1,right);
+                lrtmMobile(1,right);
             }
         }
     }
-    // 猴哥左右移动
-    var lrMobile = function(value,direction){
-        x += value*35;
+    // 猴哥移动
+    var walk = true;
+    var lrtmMobile = function(value,direction){
+        if(direction==left || direction==right){
+            x+=value*35;
+        }else{
+            y+=value*35;
+        }
+        walk = true;
         for(var i=0;i<boxPostion.length;i++){
             var isSame = (y==boxPostion[i][1]) && x==boxPostion[i][0];//下次移动路径是否有箱子
-            var walk = true;
             if(isSame){
-                for(var r=0;r<boxPostion.length;r++){
-                    var chooseD = direction==left || direction==right?(boxPostion[i][1]==boxPostion[r][1] && ((boxPostion[i][0]+35*value)==boxPostion[r][0])):((boxPostion[i][1]+35*value)==boxPostion[r][1] && boxPostion[i][0]==boxPostion[r][0]);
-                    if(r==i){
-                        continue;
-                    }else{
-                        if(chooseD){ //判断路径上是否有箱子
-                            x-=value*35;//让猴哥原地不动
-                            walk = false;
-                            break;
-                        }
-                    }
-                }
-                // 判断是否有小树
-                for(var t=0;t<treePostion.length;t++){
-                    var chooseT = direction==left || direction==right?(boxPostion[i][1]==treePostion[t][1] && ((boxPostion[i][0]+35*value)==treePostion[t][0])):((boxPostion[i][1]+35*value)==treePostion[t][1] && boxPostion[i][0]==treePostion[t][0]);
-                    if(chooseT){
-                        x-=value*35;
-                        walk = false;
-                        break;
-                    }
-                }
+                isObstacle(value,direction,boxPostion,i);
+                isObstacle(value,direction,treePostion,i);
                 if(walk){
                     boxMobile(value,direction,i);
                 }
             }
         } 
         if(!isMobile()){
-            x-=value*35;
+            judgmentDirection(value,direction);
         }
         allPic(direction);
     }
-    // 猴哥上下移动
-    var tbMobile = function(value,direction){
-        y += value*35;
-        for(var i=0;i<boxPostion.length;i++){
-            var isSame = (y==boxPostion[i][1]) && x==boxPostion[i][0];
-            var walk = true;
-            if(isSame){
-                for(var r=0;r<boxPostion.length;r++){
-                    // 如果r==i，则跳出本次循环
-                    if(r==i){
-                        continue;
-                    }else{ //否则判断箱子路径是否会有箱子或者树木
-                        if((boxPostion[i][1]+35*value)==boxPostion[r][1] && boxPostion[i][0]==boxPostion[r][0]){
-                            y-=value*35;
-                            walk = false;
-                            break;
-                        }
-                    }
-                }
-                // 判断是否有小树
-                for(var t=0;t<treePostion.length;t++){
-                    if((boxPostion[i][1]+35*value)==treePostion[t][1] && boxPostion[i][0]==treePostion[t][0]){
-                        y-=value*35;
-                        walk = false;
-                        break;
-                    }
-                }
-                if(walk){
-                    boxMobile(value,direction,i);
-                }
-            }
-        }
-        if(!isMobile()){
+    //让猴哥保持原地不动
+    var judgmentDirection = function(value,direction){
+        if(direction==left || direction==right){
+            x-=value*35;
+        }else{
             y-=value*35;
         }
-        allPic(direction);
+    }
+    // 判断是否有障碍物
+    var isObstacle = function(value,direction,name,i){
+        var directionChoos = direction==left || direction==right;
+        for(var r=0;r<name.length;r++){
+            var varName = directionChoos?(boxPostion[i][1]==name[r][1] && ((boxPostion[i][0]+35*value)==name[r][0])):((boxPostion[i][1]+35*value)==name[r][1] && boxPostion[i][0]==name[r][0]);
+            if(varName){
+                judgmentDirection(value,direction);
+                walk = false;
+                break;
+            }
+        }
     }
     // 猴哥推动箱子移动
     var boxMobile = function(value,direction,num){
