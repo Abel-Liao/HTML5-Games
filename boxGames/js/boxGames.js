@@ -1,7 +1,22 @@
 window.onload = function(){
+    // 绘制画布
     var boxGames = document.getElementById("boxGames");
     var boxGame = boxGames.getContext("2d");
-
+    // 绘制场景位置
+    var x = 0,y = 0; //猴哥的起始位置
+    var boxPostion = [[35,0],[210,210],[35*7,35*5],[35*9,35*10]];// 箱子起始位置
+    var treePostion = [[35*5,35*7],[35*7,35*4]];// 树木位置
+    var succrssPostion = [[35*7,35*7],[35*5,35*3],[35*8,35*4]];// 成功圆位置
+    var pic = {
+        bg:"images/block.gif",
+        tree:"images/wall.png",
+        succrss:"images/ball.png",
+        box:"images/box.png",
+        down:"images/down.png",
+        left:"images/left.png",
+        up:"images/up.png",
+        right:"images/right.png"
+    }
     var bg = document.getElementById("bg");
     var tree = document.getElementById("tree");
     var succrss = document.getElementById("succrss");
@@ -14,18 +29,20 @@ window.onload = function(){
     // img.src="images/block.gif";
     // 绘制图片Fun
     var imgFun = function(id,xPostion,yPostion){
-        this.id = id;
         if(id==down || id==up || id==left || id==right){ // 判断是否为绘制猴哥
             this.xPostion = xPostion-7.5;
             this.yPostion = yPostion-27;
         }else if(id==box || id==tree){ // 判断是否为绘制箱子 或者 大树
             this.xPostion = xPostion;
             this.yPostion = yPostion-11;
+        }else if(id==succrss){// 判断是否为绘制圆
+            this.xPostion = xPostion+3;
+            this.yPostion = yPostion+2;
         }else{
             this.xPostion = xPostion;
             this.yPostion = yPostion;
         }
-        boxGame.drawImage(this.id,this.xPostion,this.yPostion);
+        boxGame.drawImage(id,this.xPostion,this.yPostion);
     }
     // 绘制底图背景
     var floorFun = function(){
@@ -42,10 +59,6 @@ window.onload = function(){
             }
         }
     }
-    var x = 0,y = 0; //猴哥的起始位置
-    var boxPostion = [[35,0],[210,210],[35*7,35*5],[35*9,35*10]];// 箱子起始位置
-    var treePostion = [[35*5,35*7],[35*7,35*4]];// 树木位置
-    var succrssPostion = [[35*7,35*7],[35*5,35*3],[35*8,35*4]];// 成功圆位置
     // 绘制多个相同目标图片
     var drawAny = function (name,postion){
         for(var i=0;i<postion.length;i++){
@@ -53,7 +66,7 @@ window.onload = function(){
         }
     }
     // 绘制整个页面
-    var allPic = function(direction){
+    var allPic = function(direction){// direction 为判断猴哥面向图片
         // 绘制底图背景
         floorFun();
         // 绘制树木
@@ -67,15 +80,25 @@ window.onload = function(){
     }
     // 绘制整个页面
     allPic(down);
-     // 游戏成功
+     // 游戏成功判断
     var succrssFun = function(){
-        // if(x==237.5 && y==218){
-        //     console.log("恭喜成功了");
-        // }
+        var abc = [];
+        // 逐一判断圆上是否有箱子
+        for(var i=0;i<boxPostion.length;i++){
+            for(var r=0;r<succrssPostion.length;r++){
+                if(boxPostion[i][0]==succrssPostion[r][0] && boxPostion[i][1]==succrssPostion[r][1]){
+                    abc.push(1);
+                }
+            }
+        }
+        if(abc.length==succrssPostion.length){// 成功判断条件
+            console.log("恭喜过关");
+        }
     }
     // 键盘监听事件,且控制猴哥移动
     document.onkeydown = function(event){
         var keyNum=window.event ? event.keyCode :event.which;
+        var walk = true; // 箱子移动判断依据
         if(keyNum == 39 || keyNum == 40 || keyNum == 38 || keyNum == 37){
             if(keyNum == 40){// 下
                 lrtmMobile(1,down);
@@ -89,19 +112,18 @@ window.onload = function(){
         }
     }
     // 猴哥移动
-    var walk = true;
     var lrtmMobile = function(value,direction){
         if(direction==left || direction==right){
             x+=value*35;
         }else{
             y+=value*35;
         }
-        walk = true;
+        walk = true; //让箱子默认为随猴哥移动
         for(var i=0;i<boxPostion.length;i++){
             var isSame = (y==boxPostion[i][1]) && x==boxPostion[i][0];//下次移动路径是否有箱子
             if(isSame){
-                isObstacle(value,direction,boxPostion,i);
-                isObstacle(value,direction,treePostion,i);
+                isObstacle(value,direction,boxPostion,i);//判断移动路径上是否有箱子
+                isObstacle(value,direction,treePostion,i);//判断移动路径上是否有树木
                 if(walk){
                     boxMobile(value,direction,i);
                 }
@@ -121,7 +143,7 @@ window.onload = function(){
         }
     }
     // 判断是否有障碍物
-    var isObstacle = function(value,direction,name,i){
+    var isObstacle = function(value,direction,name,i){// name 为判断障碍物
         var directionChoos = direction==left || direction==right;
         for(var r=0;r<name.length;r++){
             var varName = directionChoos?(boxPostion[i][1]==name[r][1] && ((boxPostion[i][0]+35*value)==name[r][0])):((boxPostion[i][1]+35*value)==name[r][1] && boxPostion[i][0]==name[r][0]);
@@ -139,6 +161,7 @@ window.onload = function(){
         }else if(direction==up || direction==down){
             boxPostion[num] = [boxPostion[num][0],boxPostion[num][1]+35*value];
         }
+        succrssFun();
     }
     // 判断猴哥是否移动
     var isMobile = function(){
