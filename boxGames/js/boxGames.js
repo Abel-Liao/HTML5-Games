@@ -2,11 +2,38 @@ window.onload = function(){
     // 绘制画布
     var boxGames = document.getElementById("boxGames");
     var boxGame = boxGames.getContext("2d");
-    // 绘制场景位置
+
+    var bg = document.getElementById("bg");
+    var tree = document.getElementById("tree");
+    var succrss = document.getElementById("succrss");
+    var box = document.getElementById("box");
+    var down = document.getElementById("down");
+    var left = document.getElementById("left");
+    var up = document.getElementById("up");
+    var right = document.getElementById("right");
+
+
+    var previousLevel = document.getElementById("previous-level");
+    var nextLevel = document.getElementById("next-level");
+    var reset = document.getElementById("reset");
+    var checkpoint = 1
+    // 所有箱子起始位置
+    var boxPostions = [
+        [[210,210],[35*7,35*5],[35*9,35*10]],
+        [[35*11,35*8],[35*3,35*2],[35*5,35*10]],
+    ];
+    // 所有树木位置
+    var treePostions = [
+        [[35*5,35*7],[35*7,35*4]],
+        [[35*5,35*7],[35*7,35*4]],
+    ];
+    // 所有成功圆位置
+    var succrssPostions = [
+        [[35*7,35*7],[35*5,35*3],[35*8,35*4]],
+        [[35*7,35*7],[35*5,35*3],[35*8,35*4]],
+    ];
     var x = 0,y = 0; //猴哥的起始位置
-    var boxPostion = [[35,0],[210,210],[35*7,35*5],[35*9,35*10]];// 箱子起始位置
-    var treePostion = [[35*5,35*7],[35*7,35*4]];// 树木位置
-    var succrssPostion = [[35*7,35*7],[35*5,35*3],[35*8,35*4]];// 成功圆位置
+    // 绘制场景位置
     var pic = {
         bg:"images/block.gif",
         tree:"images/wall.png",
@@ -16,17 +43,7 @@ window.onload = function(){
         left:"images/left.png",
         up:"images/up.png",
         right:"images/right.png"
-    }
-    var bg = document.getElementById("bg");
-    var tree = document.getElementById("tree");
-    var succrss = document.getElementById("succrss");
-    var box = document.getElementById("box");
-    var down = document.getElementById("down");
-    var left = document.getElementById("left");
-    var up = document.getElementById("up");
-    var right = document.getElementById("right");
-    // var img = document.createElement('img');
-    // img.src="images/block.gif";
+    };
     // 绘制图片Fun
     var imgFun = function(id,xPostion,yPostion){
         if(id==down || id==up || id==left || id==right){ // 判断是否为绘制猴哥
@@ -59,6 +76,19 @@ window.onload = function(){
             }
         }
     }
+    // 绘制整个页面
+    var allPic = function(direction){// direction 为判断猴哥面向图片
+        // 绘制底图背景
+        floorFun();
+        // 绘制树木
+        drawAny(tree,treePostions[checkpoint-1]);
+        // 绘制目的圆
+        drawAny(succrss,succrssPostions[checkpoint-1]);
+        // 绘制箱子
+        drawAny(box,boxPostions[checkpoint-1]);
+        // 绘制猴哥
+        imgFun(direction,x,y);
+    }
     // 绘制多个相同目标图片
     var drawAny = function (name,postion){
         for(var i=0;i<postion.length;i++){
@@ -66,33 +96,22 @@ window.onload = function(){
         }
     }
     // 绘制整个页面
-    var allPic = function(direction){// direction 为判断猴哥面向图片
-        // 绘制底图背景
-        floorFun();
-        // 绘制树木
-        drawAny(tree,treePostion);
-        // 绘制目的圆
-        drawAny(succrss,succrssPostion);
-        // 绘制箱子
-        drawAny(box,boxPostion);
-        // 绘制猴哥
-        imgFun(direction,x,y);
-    }
-    // 绘制整个页面
     allPic(down);
      // 游戏成功判断
     var succrssFun = function(){
         var abc = [];
         // 逐一判断圆上是否有箱子
-        for(var i=0;i<boxPostion.length;i++){
-            for(var r=0;r<succrssPostion.length;r++){
-                if(boxPostion[i][0]==succrssPostion[r][0] && boxPostion[i][1]==succrssPostion[r][1]){
+        for(var i=0;i<boxPostions[checkpoint-1].length;i++){
+            for(var r=0;r<succrssPostions[checkpoint-1].length;r++){
+                if(boxPostions[checkpoint-1][i][0]==succrssPostions[checkpoint-1][r][0] && boxPostions[checkpoint-1][i][1]==succrssPostions[checkpoint-1][r][1]){
                     abc.push(1);
                 }
             }
         }
-        if(abc.length==succrssPostion.length){// 成功判断条件
-            console.log("恭喜过关");
+        if(abc.length==succrssPostions[checkpoint-1].length){// 成功判断条件
+            setTimeout(function(){
+                console.log("恭喜过关");
+            },300);
         }
     }
     // 键盘监听事件,且控制猴哥移动
@@ -100,7 +119,7 @@ window.onload = function(){
         var keyNum=window.event ? event.keyCode :event.which;
         var walk = true; // 箱子移动判断依据
         if(keyNum == 39 || keyNum == 40 || keyNum == 38 || keyNum == 37){
-            if(keyNum == 40){// 下
+            if(keyNum == 40){ // 下
                 lrtmMobile(1,down);
             }else if(keyNum == 38){ // 上
                 lrtmMobile(-1,up);
@@ -119,11 +138,11 @@ window.onload = function(){
             y+=value*35;
         }
         walk = true; //让箱子默认为随猴哥移动
-        for(var i=0;i<boxPostion.length;i++){
-            var isSame = (y==boxPostion[i][1]) && x==boxPostion[i][0];//下次移动路径是否有箱子
+        for(var i=0;i<boxPostions[checkpoint-1].length;i++){
+            var isSame = (y==boxPostions[checkpoint-1][i][1]) && x==boxPostions[checkpoint-1][i][0];//下次移动路径是否有箱子
             if(isSame){
-                isObstacle(value,direction,boxPostion,i);//判断移动路径上是否有箱子
-                isObstacle(value,direction,treePostion,i);//判断移动路径上是否有树木
+                isObstacle(value,direction,boxPostions[checkpoint-1],i);//判断移动路径上是否有箱子
+                isObstacle(value,direction,treePostions[checkpoint-1],i);//判断移动路径上是否有树木
                 if(walk){
                     boxMobile(value,direction,i);
                 }
@@ -146,7 +165,7 @@ window.onload = function(){
     var isObstacle = function(value,direction,name,i){// name 为判断障碍物
         var directionChoos = direction==left || direction==right;
         for(var r=0;r<name.length;r++){
-            var varName = directionChoos?(boxPostion[i][1]==name[r][1] && ((boxPostion[i][0]+35*value)==name[r][0])):((boxPostion[i][1]+35*value)==name[r][1] && boxPostion[i][0]==name[r][0]);
+            var varName = directionChoos?(boxPostions[checkpoint-1][i][1]==name[r][1] && ((boxPostions[checkpoint-1][i][0]+35*value)==name[r][0])):((boxPostions[checkpoint-1][i][1]+35*value)==name[r][1] && boxPostions[checkpoint-1][i][0]==name[r][0]);
             if(varName){
                 judgmentDirection(value,direction);
                 walk = false;
@@ -157,9 +176,9 @@ window.onload = function(){
     // 猴哥推动箱子移动
     var boxMobile = function(value,direction,num){
         if(direction==right || direction==left){//判断横向或者纵向
-            boxPostion[num] = [boxPostion[num][0]+35*value,boxPostion[num][1]];
+            boxPostions[checkpoint-1][num] = [boxPostions[checkpoint-1][num][0]+35*value,boxPostions[checkpoint-1][num][1]];
         }else if(direction==up || direction==down){
-            boxPostion[num] = [boxPostion[num][0],boxPostion[num][1]+35*value];
+            boxPostions[checkpoint-1][num] = [boxPostions[checkpoint-1][num][0],boxPostions[checkpoint-1][num][1]+35*value];
         }
         succrssFun();
     }
@@ -167,8 +186,8 @@ window.onload = function(){
     var isMobile = function(){
         var isTrue =  true;
         // 移动的下一个路径不能有树木(x,y不能与之相等)
-        for(var i=0;i<treePostion.length;i++){
-            if((x == treePostion[i][0]) && (y == treePostion[i][1])){
+        for(var i=0;i<treePostions[checkpoint-1].length;i++){
+            if((x == treePostions[checkpoint-1][i][0]) && (y == treePostions[checkpoint-1][i][1])){
                 isTrue = false;
                 break;
             }else{
@@ -176,5 +195,72 @@ window.onload = function(){
             }
         }
         return isTrue;
+    }
+    // 上一关 下一关 重置
+    previousLevel.onclick = function(){
+        x = 0,y = 0;
+        boxPostions = [
+            [[210,210],[35*7,35*5],[35*9,35*10]],
+            [[35*11,35*8],[35*3,35*2],[35*5,35*10]],
+        ];
+        treePostions = [
+            [[35*5,35*7],[35*7,35*4]],
+            [[35*5,35*7],[35*7,35*4]],
+        ];
+        succrssPostions = [
+            [[35*7,35*7],[35*5,35*3],[35*8,35*4]],
+            [[35*7,35*7],[35*5,35*3],[35*8,35*4]],
+        ];
+        if(checkpoint>1){
+            checkpoint--;
+            allPic(down);
+            if(checkpoint==1){
+                previousLevel.setAttribute("class","over");
+                nextLevel.removeAttribute("class");
+            }
+        }else{
+            previousLevel.setAttribute("class","over");
+        }
+    }
+    nextLevel.onclick = function(){
+        x = 0,y = 0;
+        boxPostions = [
+            [[210,210],[35*7,35*5],[35*9,35*10]],
+            [[35*11,35*8],[35*3,35*2],[35*5,35*10]],
+        ];
+        treePostions = [
+            [[35*5,35*7],[35*7,35*4]],
+            [[35*5,35*7],[35*7,35*4]],
+        ];
+        succrssPostions = [
+            [[35*7,35*7],[35*5,35*3],[35*8,35*4]],
+            [[35*7,35*7],[35*5,35*3],[35*8,35*4]],
+        ];
+        if(checkpoint<boxPostions.length){
+            checkpoint++;
+            allPic(down);
+            if(checkpoint==boxPostions.length){
+                nextLevel.setAttribute("class","over");
+                previousLevel.removeAttribute("class");
+            }
+        }else{
+            nextLevel.setAttribute("class","over");
+        }
+    }
+    reset.onclick = function(){
+        x = 0,y = 0;
+        boxPostions = [
+            [[210,210],[35*7,35*5],[35*9,35*10]],
+            [[35*11,35*8],[35*3,35*2],[35*5,35*10]],
+        ];
+        treePostions = [
+            [[35*5,35*7],[35*7,35*4]],
+            [[35*5,35*7],[35*7,35*4]],
+        ];
+        succrssPostions = [
+            [[35*7,35*7],[35*5,35*3],[35*8,35*4]],
+            [[35*7,35*7],[35*5,35*3],[35*8,35*4]],
+        ];
+        allPic(down);
     }
 }

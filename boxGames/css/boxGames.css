@@ -7,3 +7,23 @@ img{ display: none;}
     position: relative;
     z-index: 1;
 }
+.btn{
+    text-align: center;
+    
+}
+.btn>input{
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+    line-height: 25px;
+    background: #FEB100;
+    color: #fafafa;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
+input.over{
+    background: #dadada;
+    cursor: default;
+}
