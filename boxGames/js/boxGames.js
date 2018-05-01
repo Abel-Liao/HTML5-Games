@@ -235,7 +235,7 @@ window.onload = function(){
         starPosition();
         if(checkpoint>1){
             checkpoint--;
-            allPic(down);
+            allPic("down");
             if(checkpoint==1){
                 previousLevel.setAttribute("class","over");
                 nextLevel.removeAttribute("class");
@@ -248,7 +248,7 @@ window.onload = function(){
         starPosition();
         if(checkpoint<boxPostions.length){
             checkpoint++;
-            allPic(down);
+            allPic("down");
             if(checkpoint==boxPostions.length){
                 nextLevel.setAttribute("class","over");
                 previousLevel.removeAttribute("class");
@@ -259,13 +259,13 @@ window.onload = function(){
     }
     reset.onclick = function(){
         starPosition();
-        allPic(down);
+        allPic("down");
     }
     sureNext.onclick = function(){
         if(checkpoint<boxPostions.length){
             winDiv.setAttribute("class","successful-clearance");
             checkpoint++;
-            allPic(down);
+            allPic("down");
             if(checkpoint==boxPostions.length){
                 nextLevel.setAttribute("class","over");
                 previousLevel.removeAttribute("class");
