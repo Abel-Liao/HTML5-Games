@@ -87,25 +87,17 @@ window.onload = function(){
                 id.src = pic.right;
                 break;
         }
-        // console.log(id);
         id.onload = function(){
             boxGame.drawImage(id,x,y);
         }
     }
     // 绘制底图背景
     var floorFun = function(){
-        for(var i=0,x=0,y=0; i=true; i++){
-            imgFun(bg,"bg",x,y);
-            if(x>560){
-                x=0;
-                y+=35;
-                if(y>560){
-                    break;
-                }
-            }else{
-                x+=35;
-            }
-        }
+        for (var i=0; i<35*16; i+=35 ){
+			for (var j=0; j<35*16; j+=35 ){
+				imgFun(bg,"bg",i,j);
+			}
+		}
     }
     // 绘制整个页面
     var allPic = function(direction){// direction 为判断猴哥面向图片
