@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/boxGames.css">
-    <title>Document</title>
+    <title>推箱子</title>
 </head>
 <body>
     <img id="bg" src="images/block.gif" alt="图片">
@@ -20,9 +20,15 @@
         <canvas id="boxGames" width="560" height="560"></canvas>
     </div>
     <div class="btn">
-        <input id="previous-level" class="over" type="button" value="上一关" />
-        <input id="next-level" type="button" value="下一关" />
+        <input id="previousLevel" class="over" type="button" value="上一关" />
+        <input id="nextLevel" type="button" value="下一关" />
         <input id="reset" type="button" value="重玩" />
+    </div>
+    <div id="win" class="successful-clearance">
+        <div>
+            <p id="clearance">恭喜过关</p>
+            <input id="sureNext" type="button" value="确定">
+        </div>
     </div>
 </body>
 <script src="js/boxGames.js"></script>
